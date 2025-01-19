@@ -1,31 +1,47 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-//import "./App.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Verificación de campos vacíos
     if (!email || !password) {
-      setError('Por favor, ingresa ambos campos');
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'Por favor, ingresa ambos campos',
       });
-    } else {
-      setError('');
-      console.log('Email:', email);
-      console.log('Contraseña:', password);
-      Swal.fire({
-        icon: 'success',
-        title: '¡Bienvenido!',
-        text: 'Inicio de sesión exitoso',
-      });
+      return;
     }
+
+    // Validación del formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Por favor, ingresa un email válido',
+      });
+      return;
+    }
+
+    // Si todo es correcto
+    console.log('Email:', email);
+    console.log('Contraseña:', password);
+    
+    Swal.fire({
+      icon: 'success',
+      title: '¡Bienvenido!',
+      text: 'Inicio de sesión exitoso',
+    });
+
+    // Limpiar los campos después del inicio de sesión exitoso
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -60,11 +76,10 @@ const LoginForm = () => {
                   />
                   <label htmlFor="password">Contraseña</label>
                 </div>
-                <button type="submit" className="btn-large waves-effect waves-light btn-block">
+                <button type="submit" className="btn-submit">
                   <i className="fas fa-sign-in-alt"></i> Iniciar sesión
                 </button>
               </form>
-              {error && <p className="red-text">{error}</p>}
             </div>
           </div>
         </div>
